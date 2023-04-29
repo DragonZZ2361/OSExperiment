@@ -57,7 +57,7 @@ int main(){
         LFU(i);
         CLOCK(i);
         printf("\n");
-        printf("---------------------------------------------------------------------------------\n\n\nt");
+        printf("---------------------------------------------------------------------------------\n\n\nS");
     }
 
     return 0;
@@ -110,7 +110,7 @@ void FIFO(int total_block){
             free_block_head = tmp;
         }
     }
-    printf("FIFO: %6.4lf\t", 1 - (double)diseffect/320);
+    printf("FIFO: SSS%6.4lf\t", 1 - (double)diseffect/320);
 }
 
 void LRU(int total_block){
@@ -369,11 +369,13 @@ void CLOCK(int total_block){
                     else{
                         page_table[now->page_number].counter = 0;
                     }
+                    pre = now;
                     if(now == busy_block_tail){
                         now = busy_block_head;
                     }
-                    pre = now;
-                    now = now->next;
+                    else{
+                        now = now->next;
+                    }
                 }
             }
             struct Block *tmp;
