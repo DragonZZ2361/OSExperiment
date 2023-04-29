@@ -22,6 +22,14 @@ struct Instruction{
     int page_offset;
 };
 
+struct Result{
+    double record_FIFO[40];
+    double record_LRU[40];
+    double record_OPT[40];
+    double record_LFU[40];
+    double record_CLOCK[40];
+}result;
+
 struct Page page_table[32];
 struct Block block[32], *free_block_head, *busy_block_head, *busy_block_tail;
 struct Instruction instruction[320];
@@ -59,6 +67,55 @@ int main(){
         printf("\n");
         printf("---------------------------------------------------------------------------------\n\n\nS");
     }
+
+    FILE *f;
+    f = fopen("./Data.txt", "w+");
+    fprintf(f, "--FIFO--\n");
+    for(int i = 4 ; i <= 32 ; i++){
+        fprintf(f, "%6.4lf\t", result.record_FIFO[i]);
+        if((i - 3) % 12 == 0){
+            fprintf(f, "\n");
+        }
+    }
+    fprintf(f, "\n\n");
+
+    fprintf(f, "--LRU--\n");
+    for(int i = 4 ; i <= 32 ; i++){
+        fprintf(f, "%6.4lf\t", result.record_LRU[i]);
+        if((i - 3) % 12 == 0){
+            fprintf(f, "\n");
+        }
+    }
+    fprintf(f, "\n\n");
+
+    fprintf(f, "--OPT--\n");
+    for(int i = 4 ; i <=32 ; i++){
+        fprintf(f, "%6.4lf\t", result.record_OPT[i]);
+        if((i - 3) % 12 == 0){
+            fprintf(f, "\n");
+        }
+    }
+    fprintf(f, "\n\n");
+
+    fprintf(f, "--LFU--\n");
+    for(int i = 4 ; i <= 32 ; i++){
+        fprintf(f, "%6.4lf\t", result.record_LFU[i]);
+        if((i - 3) % 12 == 0){
+            fprintf(f, "\n");
+        }
+    }
+    fprintf(f, "\n\n");
+
+    fprintf(f, "--CLOCK--\n");
+    for(int i = 4 ; i <= 32 ; i++){
+        fprintf(f, "%6.4lf\t", result.record_CLOCK[i]);
+        if((i - 3) % 12 == 0){
+            fprintf(f, "\n");
+        }
+    }
+    fprintf(f, "\n\n");
+
+    fclose(f);
 
     return 0;
 }
@@ -111,6 +168,7 @@ void FIFO(int total_block){
         }
     }
     printf("FIFO: SSS%6.4lf\t", 1 - (double)diseffect/320);
+    result.record_FIFO[total_block] = 1 - (double)diseffect/320;
 }
 
 void LRU(int total_block){
@@ -181,6 +239,7 @@ void LRU(int total_block){
         }
     }
     printf("LRU: %6.4lf\t",1 - (double)diseffect/320);
+    result.record_LRU[total_block] = 1 - (double)diseffect/320;
 }
 
 void OPT(int total_block){
@@ -256,6 +315,7 @@ void OPT(int total_block){
         }
     }
     printf("OPT: %6.4lf\t",1 - (double)diseffect/320);
+    result.record_OPT[total_block] = 1 - (double)diseffect/320;
 }
 
 void LFU(int total_block){
@@ -326,6 +386,7 @@ void LFU(int total_block){
         }
     }
     printf("LFU: %6.4lf\t",1 - (double)diseffect/320);
+    result.record_LFU[total_block] = 1 - (double)diseffect/320;
 }
 
 void CLOCK(int total_block){
@@ -399,4 +460,5 @@ void CLOCK(int total_block){
         }
     }
     printf("CLOCK: %6.4lf\t",1 - (double)diseffect/320);
+    result.record_CLOCK[total_block] = 1 - (double)diseffect/320;
 }
