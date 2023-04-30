@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <matplotlibcpp.h>
+
+namespace plt = matplotlibcpp;
 
 struct Page{
     int page_number;
@@ -116,6 +119,40 @@ int main(){
     fprintf(f, "\n\n");
 
     fclose(f);
+
+    int n = 40;
+    std::vector<double> x(29), y1(29), y2(29), y3(29), y4(29), y5(29);
+    for(int i = 4 ; i <= 32 ; i++){
+        x[i-4] = i;
+        y1[i-4] = result.record_FIFO[i];
+        y2[i-4] = result.record_LRU[i];
+        y3[i-4] = result.record_OPT[i];
+        y4[i-4] = result.record_LFU[i];
+        y5[i-4] = result.record_CLOCK[i];
+    }
+
+    plt::named_plot("FIFO", x, y1);
+    plt::named_plot("LRU", x, y2);
+    plt::named_plot("OPT", x, y3);
+    plt::named_plot("LFU", x, y4);
+    plt::named_plot("CLOCK", x, y5);
+    plt::xlim(4, 32);
+    plt::legend();
+
+    plt::save("./figure1.png");
+    plt::show();
+
+    plt::figure_size(1200, 780);
+    plt::named_plot("FIFO", x, y1);
+    plt::named_plot("LRU", x, y2);
+    plt::named_plot("OPT", x, y3);
+    plt::named_plot("LFU", x, y4);
+    plt::named_plot("CLOCK", x, y5);
+    plt::xlim(4, 32);
+    plt::legend();
+
+    plt::save("./figure2.png");
+    plt::show();
 
     return 0;
 }
