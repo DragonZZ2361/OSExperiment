@@ -61,14 +61,15 @@ int main(){
     }
 
     for(int i = 4 ; i <= 32 ; i++){
-        printf("-------------------------------block number = %d---------------------------------\n\n", i);
+        //printf("-------------------------------block number = %d---------------------------------\n\n", i);
+        printf("Page Frame: %d\t", i);
         FIFO(i);
         OPT(i);
         LRU(i);
         LFU(i);
         CLOCK(i);
         printf("\n");
-        printf("---------------------------------------------------------------------------------\n\n\nS");
+        //printf("---------------------------------------------------------------------------------\n\n\nS");
     }
 
     FILE *f;
@@ -204,7 +205,7 @@ void FIFO(int total_block){
             free_block_head = tmp;
         }
     }
-    printf("FIFO: SSS%6.4lf\t", 1 - (double)diseffect/320);
+    printf("FIFO: %6.4lf\t", 1 - (double)diseffect/320);
     result.record_FIFO[total_block] = 1 - (double)diseffect/320;
 }
 
