@@ -90,6 +90,7 @@ struct Result RR(int n, double slice_time){
     while(true){
         if(!queue.empty()){
             auto tmp = queue.front();
+            std::cout << present_time << " " <<tmp.first << " " << tmp.second << std::endl;
             queue.pop();
             if(tmp.second <= slice_time){
                 present_time += tmp.second;
@@ -107,6 +108,7 @@ struct Result RR(int n, double slice_time){
                     }
                     else{
                         unused_process_position = i;
+                        break;
                     }
                 }
             }
@@ -121,6 +123,7 @@ struct Result RR(int n, double slice_time){
                     }
                     else{
                         unused_process_position = i;
+                        break;
                     }
                 }
                 queue.push({tmp.first, tmp.second - slice_time});
