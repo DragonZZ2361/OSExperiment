@@ -41,13 +41,13 @@ struct Result FCFS(int n){
         sum_round_time += process[i].round_time;
         sum_weighted_time += process[i].weighted_time;
     }
-    printf("--------------------------------------------FCFS--------------------------------------------\n");
+    printf("--------------------------------------------FCFS---------------------------------------------\n");
     printf("ProcessID\tArrvieTime\tServeTime\tFinishTime\tRoundTime\tWeightedTime\n");
     for(int i = 0 ; i < n ; i++){
         printf("%ld\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\n", process[i].id, process[i].arrive_time, process[i].serve_time, process[i].finish_time, process[i].round_time, process[i].weighted_time);
     }
     printf("\nAverageRoundTime = %.2lf\t\tAverageWeightedTime = %.2lf\n", sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n);
-    printf("--------------------------------------------------------------------------------------------\n\n");
+    printf("---------------------------------------------------------------------------------------------\n\n");
     return {sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n};
 }
 
@@ -153,13 +153,13 @@ struct Result RR(int n, double slice_time){
             }
         }
     }
-    printf("---------------------------------------------RR---------------------------------------------\n");
+    printf("---------------------------------------------RR----------------------------------------------\n");
     printf("ProcessID\tArrvieTime\tServeTime\tFinishTime\tRoundTime\tWeightedTime\n");
     for(int i = 0 ; i < n ; i++){
         printf("%ld\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\n", process[i].id, process[i].arrive_time, process[i].serve_time, process[i].finish_time, process[i].round_time, process[i].weighted_time);
     }
     printf("\nAverageRoundTime = %.2lf\t\tAverageWeightedTime = %.2lf\n", sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n);
-    printf("--------------------------------------------------------------------------------------------\n\n");
+    printf("---------------------------------------------------------------------------------------------\n\n");
     return {sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n};
 }
 
@@ -184,6 +184,13 @@ int main(){
         std::cin >> process[i].serve_time;
         std::cout << std::endl;
     }
+
+    printf("-----------------Input--------------------\n");
+    printf("ProcessID\tArrvieTime\tServeTime\n");
+    for(int i = 0 ; i < n ; i++){
+        printf("%ld\t\t%.1lf\t\t%.1lf\n", process[i].id, process[i].arrive_time, process[i].serve_time);
+    }
+    printf("------------------------------------------\n\n");
 
     result_FCFS = FCFS(n);
     result_SPN = SPN(n);
