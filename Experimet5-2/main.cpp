@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <queue>
+#include <matplotlibcpp.h>
 
 const int N = 100 + 10;
 
@@ -41,14 +42,7 @@ struct Result FCFS(int n){
         sum_round_time += process[i].round_time;
         sum_weighted_time += process[i].weighted_time;
     }
-    printf("--------------------------------------------FCFS--------------------------------------------\n");
-    printf("ProcessID\tArrvieTime\tServeTime\tFinishTime\tRoundTime\tWeightedTime\n");
-    for(int i = 0 ; i < n ; i++){
-        printf("%ld\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\n", process[i].id, process[i].arrive_time, process[i].serve_time, process[i].finish_time, process[i].round_time, process[i].weighted_time);
-    }
-    printf("\nAverageRoundTime = %.2lf\t\tAverageWeightedTime = %.2lf\n", sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n);
-    printf("--------------------------------------------------------------------------------------------\n\n");
-    return {sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n};
+    return {sum_round_time * 1.0, sum_weighted_time * 1.0 / n};
 }
 
 struct Result SPN(int n){
@@ -85,14 +79,7 @@ struct Result SPN(int n){
         sum_round_time += process[i].round_time;
         sum_weighted_time += process[i].weighted_time;
     }
-    printf("---------------------------------------------SPN---------------------------------------------\n");
-    printf("ProcessID\tArrvieTime\tServeTime\tFinishTime\tRoundTime\tWeightedTime\n");
-    for(int i = 0 ; i < n ; i++){
-        printf("%ld\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\n", process[i].id, process[i].arrive_time, process[i].serve_time, process[i].finish_time, process[i].round_time, process[i].weighted_time);
-    }
-    printf("\nAverageRoundTime = %.2lf\t\tAverageWeightedTime = %.2lf\n", sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n);
-    printf("---------------------------------------------------------------------------------------------\n\n");
-    return {sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n};
+    return {sum_round_time * 1.0, sum_weighted_time * 1.0 / n};
 }
 
 struct Result RR(int n, double slice_time){
@@ -153,45 +140,50 @@ struct Result RR(int n, double slice_time){
             }
         }
     }
-    printf("---------------------------------------------RR---------------------------------------------\n");
-    printf("ProcessID\tArrvieTime\tServeTime\tFinishTime\tRoundTime\tWeightedTime\n");
-    for(int i = 0 ; i < n ; i++){
-        printf("%ld\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\t\t%.1lf\n", process[i].id, process[i].arrive_time, process[i].serve_time, process[i].finish_time, process[i].round_time, process[i].weighted_time);
-    }
-    printf("\nAverageRoundTime = %.2lf\t\tAverageWeightedTime = %.2lf\n", sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n);
-    printf("--------------------------------------------------------------------------------------------\n\n");
-    return {sum_round_time * 1.0 / n, sum_weighted_time * 1.0 / n};
+    return {sum_round_time * 1.0, sum_weighted_time * 1.0 / n};
 }
 
 int main(){
+    srand((unsigned int) time(NULL));
     int n;
     int slice_time;
-    std::cout << "The Number Of Process = ";
-    std::cin >> n;
-    if(n > N){
-        std::cout << "Too Many Processes!\n";
-        return 0;
-    }
-    std::cout << "Slice Time = ";
-    std::cin >> slice_time;
-    std::cout << std::endl;
-    for(int i = 0 ; i < n ; i++){
-        std::cout << "Process ID = " << i << std::endl;
-        process[i].id = i;
-        std::cout << "Process Arrive Time = ";
-        std::cin >> process[i].arrive_time;
-        std::cout << "Process Serve Time = ";
-        std::cin >> process[i].serve_time;
-        std::cout << std::endl;
+
+    std::vector<double> x(17), y(17), z1(17), z2(17), z3(17), t(17);
+
+    for(int i = 4 ; i < 21 ; i++){
+        std::cout << "Total Process Number = " << i << std::endl;
+        t.at(i - 4) = i;
+        if(i == 4){
+            for(int j = 0 ; j < i ; j++){
+                process[j].id = j;
+                process[j].arrive_time = rand() % 50 + 1;
+                process[j].serve_time = rand() % 15 + 1;
+            }
+        }
+        else{
+            process[i-1].id = i - 1;
+            process[i-1].arrive_time = rand() % 50 + 1;
+            process[i-1].serve_time = rand() % 15 + 1;
+        }
+
+        x.at(i - 4) = FCFS(i).average_time;
+        y.at(i - 4) = SPN(i).average_time;
+        z1.at(i - 4) = RR(i, 1.0).average_time;
+        z2.at(i - 4) = RR(i, 4.0).average_time;
+        z3.at(i - 4) = RR(i, 9.0).average_time;
     }
 
-    result_FCFS = FCFS(n);
-    result_SPN = SPN(n);
-    result_RR = RR(n, slice_time);
-
-    std::cout << "FCFS : " << "Average Time : " << result_FCFS.average_time << "\t Weighted Average Time : " << result_FCFS.weighted_average_time << std::endl;
-    std::cout << "SPN : " << " Average Time : " << result_SPN.average_time << "\t Weighted Average Time : " << result_SPN.weighted_average_time << std::endl;
-    std::cout << "RR : " << "  Average Time : " << result_RR.average_time << "\t Weighted Average Time : " << result_RR.weighted_average_time << std::endl;
+    namespace plt = matplotlibcpp;
+    plt::figure_size(1200, 780);
+    plt::named_plot("FCFS", t, x);
+    plt::named_plot("SPN", t, y);
+    plt::named_plot("RR(1)", t, z1);
+    plt::named_plot("RR(4)", t, z2);
+    plt::named_plot("RR(9)", t, z3);
+    plt::title("Experimet 5");
+    plt::legend();
+    plt::save("./figure.png");
+    plt::show();
 
     return 0;
 }
